@@ -18,6 +18,17 @@ def generate_move(board: list[list[str]], next_tile: List[List[str]]) -> Move:
     )
     return move
 
+def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
+    if rotation % 4 == 0:
+        return tile
+    elif rotation % 4 == 1:
+        return list(map(list, zip(tile[1], tile[0])))
+    elif rotation % 4 == 2:
+        return [list(reversed(tile[1])), list(reversed(tile[0]))]
+    elif rotation % 4 == 3:
+        return list(map(list, zip(list(reversed(tile[0])), list(reversed(tile[1])))))
+    raise ValueError("Rotation value must be a 0, 1, 2, 3 (or one of these values when we mod by four)")
+
 def try_to_drop(
         horizontal_movement: int, 
         rotation: int, 
