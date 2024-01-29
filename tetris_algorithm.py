@@ -1,5 +1,6 @@
-from tetris_move import Move, MoveQuality, rotation, horizontal_movement
+from math import inf
 from typing import List
+from tetris_move import Move, MoveQuality, rotation, horizontal_movement
 
 def clean_tile(tile: List[List[str]]) -> List[List[str]]:
     tile_width = max(list(map(lambda t: len(''.join(t).strip()), tile)))
@@ -29,16 +30,24 @@ def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
         return list(map(list, zip(tile[1], tile[0])))
     raise ValueError("Rotation value must be a 0, 1, 2, 3 (or one of these values when we mod by four)")
 
-def max_height_at_x(board: List[List[str]], x: int) -> int:
+def max_height_of_given_at_x(board_or_tile: List[List[str]], x: int, given: str = "c") -> int:
     count = 0
-    for i in range(len(board) - 1, -1, -1):
-        if not board[i][x]:
+    for i in range(len(board_or_tile) - 1, -1, -1):
+        if board_or_tile[i][x] != given:
             return count
         count += 1
     return count
 
 def get_x_start(board_width: int, tile_width: int) -> int:
     return (board_width // 2 - 1) - (tile_width // 4)
+
+def lowest_tile_depth(board: List[List[str]], tile: List[List[str]], start: int) -> int:
+    curr_min = -inf
+    for i in range(len(tile)):
+        max_height = max_height_of_given_at_x(board, start + i)
+        air_below_height = max_height_of_given_at_x(tile, i, "")
+        curr_min = max(curr_min, max_height - air_below_height)
+    return curr_min
 
 def try_to_drop(
         horizontal_movement: int, 
@@ -47,4 +56,5 @@ def try_to_drop(
         tile: List[List[str]]
     ) -> MoveQuality:
     tile = clean_tile(rotate_tile(rotation, tile))
-    x_start = get_x_start(len(board[0]), len(tile[0]))
+    start = get_x_start(len(board[0]), len(tile[0])) + horizontal_movement
+    

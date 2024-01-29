@@ -22,12 +22,18 @@ def test_rotate_t_tile(t_tile, rotation, expected):
     assert rotate_tile(rotation, t_tile) == expected
 
 @pytest.mark.parametrize("x_index, max_height", [(0, 1), (1, 2), (2, 2), (3, 1), (4, 0)])
-def test_max_height_at_x(simple_board, x_index, max_height):
-    assert max_height_at_x(simple_board, x_index) == max_height
+def test_max_height_of_given_at_x(simple_board, x_index, max_height):
+    assert max_height_of_given_at_x(simple_board, x_index) == max_height
 
 @pytest.mark.parametrize("tile_width,x_start", [(4, 3), (3, 4), (2, 4), (1, 4)])
 def test_get_x_start(tile_width, x_start):
     assert get_x_start(10, tile_width) == x_start
+
+@pytest.mark.parametrize("x_start,lowest_depth", [(0, 2), (1, 2), (2, 2), (3, 1), (4, 0), (5, 0)])
+def test_lowest_tile_depth(simple_board, t_tile, x_start, lowest_depth):
+    t_tile = clean_tile(t_tile)
+    assert lowest_tile_depth(simple_board, t_tile, x_start) == lowest_depth
+
 
 @pytest.mark.xfail
 def test_try_to_drop_square_tile(square_tile, simple_board):
