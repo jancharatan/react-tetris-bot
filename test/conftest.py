@@ -16,7 +16,7 @@ def t_tile():
 
 @pytest.fixture
 def empty_row():
-    return [""] * 20
+    return [""] * 10
 
 @pytest.fixture
 def simple_board(empty_row):
