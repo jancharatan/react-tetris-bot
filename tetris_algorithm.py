@@ -6,7 +6,17 @@ def clean_tile(tile: List[List[str]]) -> List[List[str]]:
     return list(map(lambda t: t[:tile_width], tile))
 
 def generate_move(board: list[list[str]], next_tile: List[List[str]]) -> Move:
-    pass
+    tile = clean_tile(next_tile)
+    for horizontal in horizontal_movement:
+        for rot in rotation:
+            move_quality = try_to_drop(horizontal, rot, board, tile)
+            print(move_quality)
+
+    move = Move(
+        horizontal_movement = 4,
+        rotation = 0
+    )
+    return move
 
 def try_to_drop(
         horizontal_movement: int, 
