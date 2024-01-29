@@ -37,6 +37,9 @@ def max_height_at_x(board: List[List[str]], x: int) -> int:
         count += 1
     return count
 
+def get_x_start(board_width: int, tile_width: int) -> int:
+    return (board_width // 2 - 1) - (tile_width // 4)
+
 def try_to_drop(
         horizontal_movement: int, 
         rotation: int, 
@@ -44,3 +47,4 @@ def try_to_drop(
         tile: List[List[str]]
     ) -> MoveQuality:
     tile = clean_tile(rotate_tile(rotation, tile))
+    x_start = get_x_start(len(board[0]), len(tile[0]))

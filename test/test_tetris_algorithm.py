@@ -1,5 +1,5 @@
 import pytest
-from tetris_algorithm import clean_tile, try_to_drop, rotate_tile, max_height_at_x
+from tetris_algorithm import *
 from tetris_move import MoveQuality
 
 def test_clean_tile(square_tile, t_tile):
@@ -24,6 +24,10 @@ def test_rotate_t_tile(t_tile, rotation, expected):
 @pytest.mark.parametrize("x_index, max_height", [(0, 1), (1, 2), (2, 2), (3, 1), (4, 0)])
 def test_max_height_at_x(simple_board, x_index, max_height):
     assert max_height_at_x(simple_board, x_index) == max_height
+
+@pytest.mark.parametrize("tile_width,x_start", [(4, 3), (3, 4), (2, 4), (1, 4)])
+def test_get_x_start(tile_width, x_start):
+    assert get_x_start(10, tile_width) == x_start
 
 @pytest.mark.xfail
 def test_try_to_drop_square_tile(square_tile, simple_board):
