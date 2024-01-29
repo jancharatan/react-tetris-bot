@@ -5,8 +5,8 @@ def clean_tile(tile: List[List[str]]) -> List[List[str]]:
     tile_width = max(list(map(lambda t: len(''.join(t).strip()), tile)))
     return list(map(lambda t: t[:tile_width], tile))
 
-def generate_move(board: list[list[str]], next_tile: List[List[str]]) -> Move:
-    tile = clean_tile(next_tile)
+def generate_move(board: list[list[str]], tile: List[List[str]]) -> Move:
+    tile = clean_tile(tile)
     for horizontal in horizontal_movement:
         for rot in rotation:
             move_quality = try_to_drop(horizontal, rot, board, tile)
@@ -29,11 +29,18 @@ def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
         return list(map(list, zip(tile[1], tile[0])))
     raise ValueError("Rotation value must be a 0, 1, 2, 3 (or one of these values when we mod by four)")
 
+def max_height_at_x(board: List[List[str]], x: int) -> int:
+    count = 0
+    for i in range(len(board) - 1, -1, -1):
+        if not board[i][x]:
+            return count
+        count += 1
+    return count
+
 def try_to_drop(
         horizontal_movement: int, 
         rotation: int, 
         board: List[List[str]], 
         tile: List[List[str]]
     ) -> MoveQuality:
-    tile = rotate_tile(rotation, tile)
-
+    tile = clean_tile(rotate_tile(rotation, tile))
