@@ -11,11 +11,12 @@ def generate_move(board: list[list[str]], tile: List[List[str]]) -> Move:
     tile = clean_tile(tile)
     for rotation in [0, 1, 2, 3]:
         current_tile = clean_tile(rotate_tile(rotation, tile))
-        for x_index in range(0, len(board[0]) - len(current_tile[0])):
+        for x_index in range(0, len(board[0]) - len(current_tile[0]) + 1):
             attempt = try_to_drop(board, current_tile, x_index)
-            if (not current_move_quality) or (attempt.air_below <= current_move_quality.air_below and attempt.elevation < current_move_quality.elevation):
+            if (not current_move_quality) or (attempt.air_below <= current_move_quality.air_below and attempt.elevation < current_move_quality.elevation and attempt.max_height < current_move_quality.max_height):
                 current_move_quality = attempt
-                current_move = Move(rotation=rotation, x_start=x_index)
+                x_start = get_x_start(len(board[0]), len(current_tile[0]))
+                current_move = Move(rotation=rotation, horizontal_movement=x_index-x_start)
     return current_move
 
 def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
@@ -29,10 +30,16 @@ def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
         return list(map(list, zip(tile[1], tile[0])))
     raise ValueError("Rotation value must be a 0, 1, 2, 3 (or one of these values when we mod by four)")
 
-def max_height_of_given_at_x(board_or_tile: List[List[str]], x: int, given: str = "c") -> int:
+def max_height_of_given_at_x(board: List[List[str]], x: int, given: str = "c") -> int:
+    for i in range(0, len(board)):
+        if board[i][x] == given:
+            return len(board) - i
+    return 0
+
+def air_below_tile_column(tile: List[List[str]], column: int) -> int:
     count = 0
-    for i in range(len(board_or_tile) - 1, -1, -1):
-        if board_or_tile[i][x] != given:
+    for i in range(len(tile) - 1, -1, -1):
+        if tile[i][column]:
             return count
         count += 1
     return count
@@ -44,7 +51,7 @@ def get_lowest_elevation(board: List[List[str]], tile: List[List[str]], x_index:
     curr_min = -inf
     for i in range(len(tile[0])):
         max_height = max_height_of_given_at_x(board, x_index + i)
-        air_below_height = max_height_of_given_at_x(tile, i, "")
+        air_below_height = air_below_tile_column(tile, i)
         curr_min = max(curr_min, max_height - air_below_height)
     return curr_min
 
@@ -52,11 +59,12 @@ def get_total_air_below(board: List[List[str]], tile: List[List[str]], x_index: 
     air_below = 0
     for i in range(len(tile[0])):
         max_height = max_height_of_given_at_x(board, x_index + i)
-        air_below += height - max_height
+        air_below_height = air_below_tile_column(tile, i)
+        air_below += height - max_height + air_below_height
     return air_below
 
 def try_to_drop(board: List[List[str]], tile: List[List[str]], x_index: int) -> MoveQuality:
     lowest_elevation = get_lowest_elevation(board, tile, x_index)
     total_air_below = get_total_air_below(board, tile, x_index, lowest_elevation)
-    return MoveQuality(air_below=total_air_below, elevation=lowest_elevation)
-    
+    max_height = lowest_elevation + len(tile)
+    return MoveQuality(air_below=total_air_below, elevation=lowest_elevation, max_height=max_height)
