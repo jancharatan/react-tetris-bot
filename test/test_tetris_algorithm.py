@@ -17,7 +17,7 @@ def test_rotate_t_tile(t_tile):
 
 def test_rotate_t_tile_90(t_tile):
     t_tile = clean_tile(t_tile)
-    assert rotate_tile(1, t_tile) == [["c", ""], ["c", "c"], ["c", ""]]
+    assert rotate_tile(1, t_tile) == [["", "c"], ["c", "c"], ["", "c"]]
 
 def test_rotate_t_tile_180(t_tile):
     t_tile = clean_tile(t_tile)
@@ -25,7 +25,7 @@ def test_rotate_t_tile_180(t_tile):
 
 def test_rotate_t_tile_270(t_tile):
     t_tile = clean_tile(t_tile)
-    assert rotate_tile(3, t_tile) == [["", "c"], ["c", "c"], ["", "c"]]
+    assert rotate_tile(3, t_tile) == [["c", ""], ["c", "c"], ["c", ""]]
 
 @pytest.mark.xfail
 def test_try_to_drop_square_tile(square_tile, simple_board):
