@@ -30,10 +30,14 @@ def test_get_x_start(tile_width, x_start):
     assert get_x_start(10, tile_width) == x_start
 
 @pytest.mark.parametrize("x_start,lowest_depth", [(0, 2), (1, 2), (2, 2), (3, 1), (4, 0), (5, 0)])
-def test_lowest_tile_depth(simple_board, t_tile, x_start, lowest_depth):
+def test_lowest_tile_depth_t_tile(simple_board, t_tile, x_start, lowest_depth):
     t_tile = clean_tile(t_tile)
     assert lowest_tile_depth(simple_board, t_tile, x_start) == lowest_depth
 
+@pytest.mark.parametrize("x_start,lowest_depth", [(0, 2), (1, 2), (2, 1), (3, 0), (4, 0), (5, 0)])
+def test_lowest_tile_depth_t_tile_rotated(simple_board, t_tile, x_start, lowest_depth):
+    t_tile = clean_tile(rotate_tile(1, clean_tile(t_tile)))
+    assert lowest_tile_depth(simple_board, t_tile, x_start) == lowest_depth
 
 @pytest.mark.xfail
 def test_try_to_drop_square_tile(square_tile, simple_board):

@@ -43,7 +43,7 @@ def get_x_start(board_width: int, tile_width: int) -> int:
 
 def lowest_tile_depth(board: List[List[str]], tile: List[List[str]], start: int) -> int:
     curr_min = -inf
-    for i in range(len(tile)):
+    for i in range(len(tile[0])):
         max_height = max_height_of_given_at_x(board, start + i)
         air_below_height = max_height_of_given_at_x(tile, i, "")
         curr_min = max(curr_min, max_height - air_below_height)
