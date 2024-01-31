@@ -76,6 +76,10 @@ def test_generate_move_t_tile(complex_board, t_tile):
     move = generate_move(complex_board, t_tile)
     assert move == Move(rotation=2, horizontal_movement=3)
 
-def test_straight_line_board(straight_line_board, straight_line_tile):
+def test_generate_move_straight_line_board(straight_line_board, straight_line_tile):
     move = generate_move(straight_line_board, straight_line_tile)
     assert move == Move(rotation=1, horizontal_movement=2)
+
+def test_generate_move_square_tile_complex_board(complex_board, square_tile):
+    move = generate_move(complex_board, square_tile)
+    assert move == Move(rotation=0, horizontal_movement=-3)

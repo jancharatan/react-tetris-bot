@@ -1,5 +1,5 @@
 from math import inf
-from typing import List
+from typing import List, Tuple
 from tetris_move import Move, MoveQuality
 
 def clean_tile(tile: List[List[str]]) -> List[List[str]]:
@@ -7,17 +7,17 @@ def clean_tile(tile: List[List[str]]) -> List[List[str]]:
     return list(map(lambda t: t[:tile_width], tile))
 
 def generate_move(board: list[list[str]], tile: List[List[str]]) -> Move:
-    current_move_quality = current_move = None
+    moves = []
     tile = clean_tile(tile)
     for rotation in [0, 1, 2, 3]:
         current_tile = clean_tile(rotate_tile(rotation, tile))
         for x_index in range(0, len(board[0]) - len(current_tile[0]) + 1):
             attempt = try_to_drop(board, current_tile, x_index)
-            if (not current_move_quality) or (attempt.air_below <= current_move_quality.air_below and attempt.elevation < current_move_quality.elevation and attempt.max_height < current_move_quality.max_height):
-                current_move_quality = attempt
-                x_start = get_x_start(len(board[0]), len(current_tile[0]))
-                current_move = Move(rotation=rotation, horizontal_movement=x_index-x_start)
-    return current_move
+            x_start = get_x_start(len(board[0]), len(current_tile[0]))
+            current_move = Move(rotation=rotation, horizontal_movement=x_index-x_start)
+            moves.append((attempt, current_move))
+    moves.sort(key= lambda x: (x[0].air_below, x[0].max_height, x[0].elevation))
+    return moves[0][1]
 
 def rotate_tile(rotation: int, tile: List[List[str]]) -> List[List[str]]:
     if rotation % 4 == 0:
