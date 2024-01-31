@@ -3,8 +3,8 @@ import pytest
 @pytest.fixture
 def square_tile():
     return [
-        ["c", "c", "", ""],
-        ["c", "c", "", ""]
+        ["", "c", "c", ""],
+        ["", "c", "c", ""]
     ]
 
 @pytest.fixture
@@ -19,6 +19,13 @@ def straight_line_tile():
     return [
         ["", "", "", ""],
         ["c", "c", "c", "c"]
+    ]
+
+@pytest.fixture
+def s_tile():
+    return [
+        ["", "s", "s", ""],
+        ["s", "s", "", ""]
     ]
 
 @pytest.fixture
@@ -45,6 +52,20 @@ def complex_board(empty_row):
     board.append(["", "c", "c", "c", "c", "c", "", "", "", ""])
     board.append(["", "c", "c", "c", "", "", "c", "", "", ""])
     board.append(["", "c", "c", "c", "", "", "", "c", "", "c"])
+    return board
+
+@pytest.fixture
+def very_complex_board(empty_row):
+    board = [empty_row] * 11
+    board.append(["", "", "", "", "", "c", "", "", "", ""])
+    board.append(["", "", "", "", "c", "c", "c", "c", "", ""])
+    board.append(["", "", "", "", "c", "c", "c", "c", "", ""])
+    board.append(["", "", "c", "", "c", "c", "c", "c", "", ""])
+    board.append(["", "c", "c", "c", "c", "c", "c", "c", "c", ""])
+    board.append(["", "c", "c", "c", "c", "c", "c", "c", "c", ""])
+    board.append(["", "c", "", "c", "c", "c", "c", "c", "c", ""])
+    board.append(["", "c", "c", "c", "c", "c", "c", "c", "c", ""])
+    board.append(["c", "c", "", "", "c", "c", "c", "c", "c", ""])
     return board
 
 @pytest.fixture

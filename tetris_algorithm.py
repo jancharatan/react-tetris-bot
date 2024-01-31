@@ -1,10 +1,20 @@
 from math import inf
-from typing import List, Tuple
+from typing import List
 from tetris_move import Move, MoveQuality
 
 def clean_tile(tile: List[List[str]]) -> List[List[str]]:
-    tile_width = max(list(map(lambda t: len(''.join(t).strip()), tile)))
-    return list(map(lambda t: t[:tile_width], tile))
+    start, end = len(tile), 0
+    for row in tile:
+        if "".join(row):
+            first_occurrence = None
+            for i, c in enumerate(row):
+                if c:
+                    if first_occurrence is None:
+                        first_occurrence = i
+                    last_occurrence = i
+            start = min(start, first_occurrence)
+            end = max(end, last_occurrence)
+    return list(map(lambda x: x[start: end + 1], tile))
 
 def generate_move(board: list[list[str]], tile: List[List[str]]) -> Move:
     moves = []
@@ -68,3 +78,5 @@ def try_to_drop(board: List[List[str]], tile: List[List[str]], x_index: int) -> 
     total_air_below = get_total_air_below(board, tile, x_index, lowest_elevation)
     max_height = lowest_elevation + len(tile)
     return MoveQuality(air_below=total_air_below, elevation=lowest_elevation, max_height=max_height)
+
+print(clean_tile([["", "", "", ""], ["c", "c", "c", "c"]]))
